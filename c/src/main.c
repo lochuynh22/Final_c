@@ -10,6 +10,7 @@ int main(){
     User tkn_user[100];
     int choice;
     int n=0;
+    char arr_1[100];
     do{
         printf("\n***Bank Management System Using C***");
         printf("\n");
@@ -37,6 +38,9 @@ int main(){
             case 2:
                 hienthidanhsach(tkn,tkn_user,&n);
                 break;
+            case 3:
+                timkiemtennguoidung(tkn, tkn_user,arr_1,n);
+                break;
             case 0:
                 break;
             default:
@@ -56,3 +60,4 @@ int main(){
 
     return 0;   
 }
+

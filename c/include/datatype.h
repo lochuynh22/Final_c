@@ -1,5 +1,3 @@
-#ifndef DATATYPE_H
-#define DATATYPE_H
 
 #include <stdbool.h>
 
@@ -22,7 +20,7 @@ struct accountInfo {
     bool status;
     char username[10];
     char password[10];
-    struct Transaction transactionHistory[100]; // kích thước ví dụ
+    struct Transaction transactionHistory[100]; 
 };
 
 struct User {
@@ -30,8 +28,7 @@ struct User {
     char name[20];
     struct Date dateOfBirth;
     bool gender;
-    char phone[10];
-    char email[20];
+    char phone[15];
+    char email[30];
 };
 
-#endif // DATATYPE_H
