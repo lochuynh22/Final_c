@@ -1,5 +1,5 @@
 //trien khai ham da khai bao
-
+#include <stdlib.h>.
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -11,18 +11,19 @@ void clear_buffer() {
     int c;
     while ((c= getchar()) !='\n'&&c != EOF);
 }
+
 //ham xem trung ko
 int is_duplicate(struct accountInfo tkn[], struct User tkn_user[], int count, 
     const char *new_id, const char *new_email, const char *new_phone, const char *new_username) {
 for (int i=0; i<count;i++) {
     if ((new_id &&strcmp(tkn[i].userId, new_id)==0)||
-        (new_email &&strcmp(tkn_user[i].email, new_email)==0)||
-        (new_phone &&strcmp(tkn_user[i].phone, new_phone)==0)||
+        (new_email &&strcmp(tkn_user[i].email,new_email)==0)||
+        (new_phone &&strcmp(tkn_user[i].phone,new_phone)==0)||
         (new_username &&strcmp(tkn[i].username, new_username)== 0)){
-            return 1;  // Phát hiện trùng lặp
+            return 1; //trung lap
     }
 }
-return 0;  // Không trùng lặp
+return 0; //ko trung
 }
 void menuAdmin(){
     printf("***Admin Management System Using C***");
@@ -32,15 +33,20 @@ void menuAdmin(){
     printf("%-5s[1] Add A New user.\n"," ");
     printf("%-5s[2] Show All users.\n"," ");
     printf("%-5s[3] Search by username .\n"," ");
-    printf("%-5s[4] Loock(Unlock)an user.\n"," ");
+    printf("%-5s[4] Lock(Unlock)an user.\n"," ");
     printf("%-5s[5] User Guideline.\n"," ");
     printf("%-5s[6] About Us.\n"," ");
     printf("%-5s[0] Exit the program.\n"," ");
     printf("%-5s==================\n", " ");
     printf("%-5sEnter The Choice:"," ");
-};
 
-void themnguoidung(struct accountInfo tkn[100], struct User tkn_user[100], int *n) {
+};
+// void selectionsortl(struct accountInfo tkn[100], struct User tkn_user[100], int *n){
+    
+// }
+
+void adduser(struct accountInfo tkn[100], struct User tkn_user[100], int *n) {
+
     printf("\t*** Add a New User ***\n");
 
     //Nhap du lieu ID
@@ -80,7 +86,7 @@ void themnguoidung(struct accountInfo tkn[100], struct User tkn_user[100], int *
         tkn_user[*n].email[strcspn(tkn_user[*n].email,"\n")]='\0';
         len=strlen(tkn_user[*n].email);
         if(len<10 || len>30){
-            printf("Error: Email can not be less 10 char");
+            printf("Error: Email can not be less 10 char\n");
             continue;
         }
         if(is_duplicate(tkn, tkn_user,*n,NULL, tkn_user[*n].email, NULL, NULL)){
@@ -120,7 +126,7 @@ void themnguoidung(struct accountInfo tkn[100], struct User tkn_user[100], int *
     scanf("%d",&tkn_user[*n].dateOfBirth.month);
     printf("\tEnter the Year: ");
     scanf("%d",&tkn_user[*n].dateOfBirth.year);
-    clear_buffer();
+    fflush(stdin);
 
     //ten dang nhap
     do{
@@ -137,7 +143,8 @@ void themnguoidung(struct accountInfo tkn[100], struct User tkn_user[100], int *
             continue;
         }
         break;
-    }while(len<5);
+    }while(1);
+
 
     //so du banlance
     do{
@@ -152,11 +159,14 @@ void themnguoidung(struct accountInfo tkn[100], struct User tkn_user[100], int *
         }
     }while(tkn[*n].balance<0);
 
-    printf("User added successfully!\n");
     (*n)++;
+    system("cls");
+    printf("User added successfully!\n");
 }
 
-void hienthidanhsach(struct accountInfo tkn[100], struct User tkn_user[100], int *n) {
+void displaylistuser(struct accountInfo tkn[100], struct User tkn_user[100], int *n) {
+int choice;
+
     if(*n>0){
     printf("+======================+======================+==============================+====================+============+\n");
     printf("|        ID            |        Name          |            Email             |       Phone        |   Status   |\n");
@@ -170,55 +180,95 @@ void hienthidanhsach(struct accountInfo tkn[100], struct User tkn_user[100], int
                tkn_user[i].phone,
                "lock");
         printf("+======================+======================+==============================+====================+============+\n");
-    }}else 
+        
+    }
+    printf("Press(1)to back:");
+                scanf("%d",&choice);
+                system("cls");
+                if(choice=1){
+                    return;  
+                }
+    }else 
     printf("***EMPTY LIST***\n");
+    printf("Press(1)to back");
+    scanf("%d",&choice);
+    system("cls");
+    if(choice=1){
+    return;  
+    }
 }
 
-void timkiemtennguoidung(struct accountInfo tkn[100], struct User tkn_user[100], char a[],int n){
+void finduser(struct accountInfo tkn[100], struct User tkn_user[100], char a[],int n){
+    int choice;
+    int choice_1;
     if(n==0){
         printf("***EMPTY LIST***\n");
-        return;
+        printf("Press(1)to back:");
+                scanf("%d",&choice);
+                system("cls");
+                if(choice=1){
+                    return;  
+                }
     }
-    int choice_1;
+
     printf("\t***SEARCH BY*** \n");
     printf("\t  1.ID\n");
     printf("\t  2.Name\n");
+    printf("\t  0.Back Menu Admin\n");
     printf("\t  Enter choice: ");
     scanf("%d", &choice_1);
     getchar();
-    if(choice_1==0){
-        return;
-    }
-    if(choice_1==1){
-        char id[23];
-        printf("Enter id find:");
-        fgets(id, sizeof(id), stdin);
-        id[strcspn(id, "\n")] ='\0';
-        int found=0;
+    system("cls");
+    switch (choice_1)
+    {
+    case 1:{
+    char id[23];
+    int choice;
+    printf("Enter id find:");
+    fgets(id, sizeof(id), stdin);
+    id[strcspn(id, "\n")] ='\0';
+    int found=0;
 
-    for (int i=0;i<n;i++) {
-        if (strcmp(tkn[i].userId,id) == 0) { 
-            printf("+======================+======================+==============================+====================+============+\n");
-            printf("|        ID            |        Name          |            Email             |       Phone        |   Status   |\n");
-            printf("+======================+======================+==============================+====================+============+\n");
-            printf("| %-20s | %-20s | %-28s | %-18s | %-10s |\n",
-                tkn[i].userId,
-                tkn_user[i].name,
-                tkn_user[i].email,
-                tkn_user[i].phone,
-                "lock");
-            printf("+======================+======================+==============================+====================+============+\n");
-            found = 1;
-            break;     
+        for (int i=0;i<n;i++) {
+            if (strcmp(tkn[i].userId,id) == 0) { 
+                printf("Find by id\n");
+                printf("+======================+======================+==============================+====================+============+\n");
+                printf("|        ID            |        Name          |            Email             |       Phone        |   Status   |\n");
+                printf("+======================+======================+==============================+====================+============+\n");
+                printf("| %-20s | %-20s | %-28s | %-18s | %-10s |\n",
+                            tkn[i].userId,
+                            tkn_user[i].name,
+                            tkn_user[i].email,
+                            tkn_user[i].phone,
+                            "lock");
+                printf("+======================+======================+==============================+====================+============+\n");
+                printf("+Username:%s\n",tkn[i].username);
+                printf("+Date of birth: %02d/%02d/%4d\n", tkn_user[i].dateOfBirth.day,tkn_user[i].dateOfBirth.month,tkn_user[i].dateOfBirth.year);
+                printf("Balance: %.2f\n",tkn[i].balance);
+                found = 1;
+                printf("Press(1)to back:");
+                scanf("%d",&choice);
+                system("cls");
+                if(choice=1){
+                    return;  
+                }
         }
     }
 
-    if (!found) {
-        printf("\t***No find***!!\n");
+        if (!found) {
+            printf("\t***No find***!!\n");
+            printf("Press(1)to back:");
+            scanf("%d",&choice);
+            system("cls");
+            if(choice=1){
+                return;  
+            }
+        }
+        break;
     }
-    }
-    if(choice_1==2){
+    case 2:{
     char find_user[50];
+    int choice;
     printf("Enter name user find:");
     fgets(find_user, sizeof(find_user), stdin);
     
@@ -229,6 +279,7 @@ void timkiemtennguoidung(struct accountInfo tkn[100], struct User tkn_user[100],
     for(int i=0; i< n;i++){
         //timkiemchuoicontrongchuoilon
         if (strstr(tkn_user[i].name, find_user)!= NULL) {
+            printf("Find by name user\n");
             printf("+======================+======================+==============================+====================+============+\n");
             printf("|        ID            |        Name          |            Email             |       Phone        |   Status   |\n");
             printf("+======================+======================+==============================+====================+============+\n");
@@ -238,12 +289,62 @@ void timkiemtennguoidung(struct accountInfo tkn[100], struct User tkn_user[100],
                 tkn_user[i].email,
                 tkn_user[i].phone,
                 "lock");
-         printf("+======================+======================+==============================+====================+============+\n");
-            found = 1;
+            printf("+======================+======================+==============================+====================+============+\n");
+            printf("Press(1)to back:");
+                scanf("%d",&choice);
+                system("cls");
+                if(choice=1){
+                    return;  
+                }
         }
     }
     if(!found){
         printf("\t***No find***!!\n");
+        printf("Press(1)to back:");
+                scanf("%d",&choice);
+                system("cls");
+                if(choice=1){
+                    return;  
+                }
     }
 }
+    break;
+    case 0:
+        break;
+    default:{
+    int choice;
+        printf("Lua chon khong hop le!!!\n");
+        printf("Press(1)to back:");
+        scanf("%d",&choice);
+        system("cls");
+        if(choice=1){
+            return;  
+        }
+    }
+}while(choice_1 !=0);
 }
+void lockunclockuser(struct accountInfo tkn[], struct User tkn_user[],int n){
+    int choice;
+    int lock, unlock;
+    char new_id;
+    if(n=0){
+        printf("***EMPTY LIST***\n");
+        printf("Press(1)to back:");
+                scanf("%d",&choice);
+                system("cls");
+                if(choice=1){
+                    return;  
+                }
+    }else{
+    printf("Enter id want to lock/unlock");
+    scanf("%s",&new_id);
+    getchar();
+    for (int i; i<n;i++){
+        if ((new_id &&strcmp(tkn[i].userId, new_id)==0)){
+        printf("co ton tai nguoi dung\n");
+        }
+        else
+        printf("No found user!!!\n");
+    }
+}
+}   

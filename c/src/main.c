@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include"function.c"
 #include<stdbool.h>
+#include <stdlib.h>.
 
 
 typedef struct accountInfo accountInfo;
@@ -23,29 +24,34 @@ int main(){
         printf("%-5sEnter The Choice:"," ");
         scanf("%d", &choice);
         getchar();
+        system("cls");
     switch(choice){
         case 1:{
         int admin_choice;
+
         do{
             menuAdmin();
             scanf("%d",&admin_choice);
             getchar();
+            system("cls");
         switch (admin_choice)
         {
             case 1:
-                themnguoidung(tkn,tkn_user,&n);
+                adduser(tkn,tkn_user,&n);
                 break;
             case 2:
-                hienthidanhsach(tkn,tkn_user,&n);
+                displaylistuser(tkn,tkn_user,&n);
                 break;
             case 3:
-                timkiemtennguoidung(tkn, tkn_user,arr_1,n);
+                finduser(tkn, tkn_user,arr_1,n);
+                break;
+            case 4:
+                // lockunclockuser(tkn, tkn_user,&n);
                 break;
             case 0:
                 break;
             default:
-                printf("Lua chon khong hop le!!");
-                break;
+                printf("Lua chon khong hop le!!!\n");
         }
         }while (admin_choice != 0);
         break;
@@ -57,7 +63,6 @@ int main(){
         break;
     }
     }while(choice!=0);
-
     return 0;   
 }
 

@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "datatype.h": "c"
+        "datatype.h": "c",
+        "string.h": "c"
     }
 }
