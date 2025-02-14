@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include"function.c"
 #include<stdbool.h>
-#include <stdlib.h>.
+#include <stdlib.h>
 
 
 typedef struct accountInfo accountInfo;
@@ -11,7 +11,6 @@ int main(){
     User tkn_user[100];
     int choice;
     int n=0;
-    char arr_1[100];
     do{
         printf("\n***Bank Management System Using C***");
         printf("\n");
@@ -43,10 +42,13 @@ int main(){
                 displaylistuser(tkn,tkn_user,&n);
                 break;
             case 3:
-                finduser(tkn, tkn_user,arr_1,n);
+                finduser(tkn, tkn_user,n);
                 break;
             case 4:
-                // lockunclockuser(tkn, tkn_user,&n);
+                lockUnlockUser(tkn,tkn_user, n);
+                break;
+            case  5:
+                listsort(tkn,tkn_user, n);
                 break;
             case 0:
                 break;

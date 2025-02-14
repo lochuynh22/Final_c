@@ -17,7 +17,7 @@ struct Transaction {
 struct accountInfo {
     char userId[20];
     float balance;
-    bool status;
+    char status[10];
     char username[10];
     char password[10];
     struct Transaction transactionHistory[100]; 
