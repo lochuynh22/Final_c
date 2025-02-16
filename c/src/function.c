@@ -22,17 +22,43 @@ void clear_system(){
 }
 //ham xem trung ko
 int is_duplicate(struct accountInfo tkn[], struct User tkn_user[], int count, 
-    const char *new_id, const char *new_email, const char *new_phone, const char *new_username) {
-for (int i=0; i<count;i++) {
-    if ((new_id &&strcmp(tkn[i].userId, new_id)==0)||
-        (new_email &&strcmp(tkn_user[i].email,new_email)==0)||
-        (new_phone &&strcmp(tkn_user[i].phone,new_phone)==0)||
-        (new_username &&strcmp(tkn[i].username, new_username)== 0)){
-            return 1; //trung lap
-    }
+    const char *new_id, const char *new_email, 
+    const char *new_phone, const char *new_username, 
+    const char *filename) {
+// trung trong du lieu nhap
+for (int i = 0; i < count; i++) {
+if ((new_id && strcmp(tkn[i].userId, new_id) == 0) ||
+(new_email && strcmp(tkn_user[i].email, new_email) == 0) ||
+(new_phone && strcmp(tkn_user[i].phone, new_phone) == 0) ||
+(new_username && strcmp(tkn[i].username, new_username) == 0)) {
+return 1; // trung
 }
-return 0; //ko trung
 }
+
+// trung trong file txt
+FILE *file = fopen(filename, "r");
+if (file == NULL) {
+printf("Error: File %s not found, assuming no duplicates in file.\n", filename);
+return 0; // ko co trong file ko trung
+}
+
+char userId[20], email[30], phone[15], username[10];
+while (fscanf(file, "%[^,], %*[^,], %[^,], %[^,], %*d-%*d-%*d, %[^,], %*f, %*s\n",
+ userId, email, phone, username) == 4) {
+
+if ((new_id && strcmp(userId, new_id) == 0) ||
+(new_email && strcmp(email, new_email) == 0) ||
+(new_phone && strcmp(phone, new_phone) == 0) ||
+(new_username && strcmp(username, new_username) == 0)) {
+fclose(file);
+return 1; // trung
+}
+}
+
+fclose(file);
+return 0; //0 trung
+}
+
 void menuAdmin(){
     printf("***Admin Management System Using C***");
     printf("\n");
@@ -52,158 +78,186 @@ void menuAdmin(){
 
 
 void adduser(struct accountInfo tkn[100], struct User tkn_user[100], int *n) {
+    FILE *file = fopen("user.txt", "a"); //mo file che do ghi them
+    if (file == NULL) {
+        printf("Error opening file!\n");
+        return;
+    }
 
     printf("\t*** Add a New User ***\n");
     strcpy(tkn[*n].status, "LOCK");
     fflush(stdin);
-    //Nhap du lieu ID
+    
     int len;  
 
+    // Nhập ID
     do {
         printf("Enter the ID (10-20 characters): ");
-        fgets(tkn[*n].userId, sizeof(tkn[*n].userId),stdin);
-        tkn[*n].userId[strcspn(tkn[*n].userId, "\n")]='\0';
+        fgets(tkn[*n].userId, sizeof(tkn[*n].userId), stdin);
+        tkn[*n].userId[strcspn(tkn[*n].userId, "\n")] = '\0';
 
         len = strlen(tkn[*n].userId);
-        if (len <10||len>20) {
-            printf("Error:ID can not be less than 10 char!!!\n");
+        if (len < 10 || len > 20) {
+            printf("Error: ID must be between 10-20 characters!\n");
             continue;
         }
-        if (is_duplicate(tkn, tkn_user, *n, tkn[*n].userId, NULL, NULL, NULL)) {
+        if (is_duplicate(tkn, tkn_user, *n, tkn[*n].userId, NULL, NULL, NULL, "user.txt")) {
             printf("Error: Duplicate ID!!!\n");
             continue;
         }
         break;
-        
     } while (1);
 
-    //nhap ho ten
-    do{
+    // Nhập họ tên
+    do {
         printf("Enter full name: ");
-        fgets(tkn_user[*n].name,sizeof(tkn_user[*n].name),stdin);
-        tkn_user[*n].name[strcspn(tkn_user[*n].name,"\n")] ='\0';
+        fgets(tkn_user[*n].name, sizeof(tkn_user[*n].name), stdin);
+        tkn_user[*n].name[strcspn(tkn_user[*n].name, "\n")] = '\0';
         len = strlen(tkn_user[*n].name);
-        // if() them dk
+    } while (len < 5 || len > 25);
 
-    }while(len<5 || len>25);
-
-    //email
-    do{
+    // Nhập email
+    do {
         printf("Enter email: ");
-        fgets(tkn_user[*n].email,sizeof(tkn_user[*n].email),stdin);
-        tkn_user[*n].email[strcspn(tkn_user[*n].email,"\n")]='\0';
-        len=strlen(tkn_user[*n].email);
-        if(len<10 || len>30){
-            printf("Error: Email can not be less 10 char\n");
+        fgets(tkn_user[*n].email, sizeof(tkn_user[*n].email), stdin);
+        tkn_user[*n].email[strcspn(tkn_user[*n].email, "\n")] = '\0';
+        len = strlen(tkn_user[*n].email);
+        if (len < 10 || len > 30) {
+            printf("Error: Email must be between 10-30 characters!\n");
             continue;
         }
-        if(is_duplicate(tkn, tkn_user,*n,NULL, tkn_user[*n].email, NULL, NULL)){
-            printf("Error: Duplicate email !!!\n");
+        if (is_duplicate(tkn, tkn_user, *n, NULL, tkn_user[*n].email, NULL, NULL, "user.txt")) {
+            printf("Error: Duplicate email!!!\n");
             continue;
         }
         break;
-    }while(1);
-    
+    } while (1);
 
-    //so dien thoai
-    do{
+    // Nhập số điện thoại
+    do {
         printf("Enter phone number: ");
-        fgets(tkn_user[*n].phone,sizeof(tkn_user[*n].phone),stdin);
-        tkn_user[*n].phone[strcspn(tkn_user[*n].phone,"\n")]='\0';
-        len=strlen(tkn_user[*n].phone);
-        if(len<5||len>15){
-            printf("Error: Phone number can not be less 5 num!!\n");
+        fgets(tkn_user[*n].phone, sizeof(tkn_user[*n].phone), stdin);
+        tkn_user[*n].phone[strcspn(tkn_user[*n].phone, "\n")] = '\0';
+        len = strlen(tkn_user[*n].phone);
+        if (len < 5 || len > 15) {
+            printf("Error: Phone number must be between 5-15 characters!\n");
             continue;
         }
-        if(is_duplicate(tkn, tkn_user,*n,NULL, NULL, tkn_user[*n].phone, NULL)){
-            printf("Error: Duplicate phone number !!!\n");
+        if (is_duplicate(tkn, tkn_user, *n, NULL, NULL, tkn_user[*n].phone, NULL, "user.txt")) {
+            printf("Error: Duplicate phone number!!!\n");
             continue;
         }
         break;
-    }while(1);
+    } while (1);
 
-    // //gioi tinh    
-    // printf("Enter the gender (0:female 1: male):");
-    // scanf("%d", &tkn_user[*n].gender);
-        
-    //ngay sinh
+    // Nhập ngày sinh
     printf("Enter Date of Birth:\n");
     printf("\tEnter the Day: ");
-    scanf("%d",&tkn_user[*n].dateOfBirth.day);
+    scanf("%d", &tkn_user[*n].dateOfBirth.day);
     printf("\tEnter the Month: ");
-    scanf("%d",&tkn_user[*n].dateOfBirth.month);
+    scanf("%d", &tkn_user[*n].dateOfBirth.month);
     printf("\tEnter the Year: ");
-    scanf("%d",&tkn_user[*n].dateOfBirth.year);
+    scanf("%d", &tkn_user[*n].dateOfBirth.year);
     fflush(stdin);
 
-    //ten dang nhap
-    do{
+    // Nhập tên đăng nhập
+    do {
         printf("Enter username: ");
-        fgets(tkn[*n].username, sizeof(tkn[*n].username),stdin);
-        tkn[*n].username[strcspn(tkn[*n].username,"\n")] ='\0';
-        len=strlen(tkn[*n].username);
-        if(len<5||len>15){
-            printf("Error: Username can not less than 5 char!!\n");
+        fgets(tkn[*n].username, sizeof(tkn[*n].username), stdin);
+        tkn[*n].username[strcspn(tkn[*n].username, "\n")] = '\0';
+        len = strlen(tkn[*n].username);
+        if (len < 5 || len > 15) {
+            printf("Error: Username must be between 5-15 characters!\n");
             continue;
         }
-        if(is_duplicate(tkn, tkn_user,*n,NULL, NULL, NULL, tkn[*n].username)){
-            printf("Error: Duplicate Username !!!\n");
+        if (is_duplicate(tkn, tkn_user, *n, NULL, NULL, NULL, tkn[*n].username, "user.txt")) {
+            printf("Error: Duplicate username!!!\n");
             continue;
         }
         break;
-    }while(1);
+    } while (1);
 
+    // Nhập số dư tài khoản (balance)
+    do {
+        printf("Enter the balance: ");
+        scanf("%f", &tkn[*n].balance);
+        fflush(stdin);
+        if (tkn[*n].balance < 0) {
+            printf("Error: Balance cannot be negative!\n");
+        }
+    } while (tkn[*n].balance < 0);
 
-    //so du banlance
-    do{
-        printf("Enter the balance:");
-        scanf("%f",&tkn[*n].balance);
-        if(tkn[*n].balance!=1){
-            fflush(stdin);
-            continue;
-        }
-        if(tkn[*n].balance<0){
-            printf("Error!!!"); 
-        }
-    }while(tkn[*n].balance<0);
+    //ghi du lieu vao file
+    fprintf(file, "%s, %s, %s, %s, %d-%d-%d, %s, %.2f, %s\n", 
+            tkn[*n].userId,
+            tkn_user[*n].name,
+            tkn_user[*n].email,
+            tkn_user[*n].phone,
+            tkn_user[*n].dateOfBirth.day,
+            tkn_user[*n].dateOfBirth.month,
+            tkn_user[*n].dateOfBirth.year,
+            tkn[*n].username,
+            tkn[*n].balance,
+            tkn[*n].status);
+
+    fclose(file);
     (*n)++;
     system("cls");
     printf("User added successfully!\n");
 }
 
-void displaylistuser(struct accountInfo tkn[100], struct User tkn_user[100], int *n) {
-int choice;
+void displaylistuser() {
+    FILE *file = fopen("user.txt", "r"); // mo file che do doc
+    if (file == NULL) {
+        printf("Error: Cannot open file users.txt!\n");
+        return;
+    }
 
-    if(*n>0){
+    char userId[25], name[30], email[40], phone[20], username[20], status[10];
+    int day, month, year;
+    float balance;
+    int choice;
+
     printf("+======================+======================+==============================+====================+============+\n");
     printf("|        ID            |        Name          |            Email             |       Phone        |   Status   |\n");
     printf("+======================+======================+==============================+====================+============+\n");
 
-    for (int i=0;i<*n;i++) {
+    while (fscanf(file, " %[^,], %[^,], %[^,], %[^,], %d-%d-%d, %[^,], %f, %s\n", 
+                  userId, name, email, phone, &day, &month, &year, username, &balance, status) != EOF) {
         printf("| %-20s | %-20s | %-28s | %-18s | %-10s |\n",
-               tkn[i].userId,
-               tkn_user[i].name,
-               tkn_user[i].email,
-               tkn_user[i].phone,
-               tkn[i].status);
+               userId, name, email, phone, status);
         printf("+======================+======================+==============================+====================+============+\n");
-        
     }
-    printf("Press(1)to back:");
-                scanf("%d",&choice);
-                system("cls");
-                if(choice==1){
-                    return;  
-                }
-    }else 
-    printf("***EMPTY LIST***\n");
-    clear_system(); 
+
+    fclose(file); // Đóng file sau khi đọc xong
+
+    // Quay lại menu chính
+    printf("Press (1) to go back: ");
+    scanf("%d", &choice);
+    system("cls");
+    if (choice == 1) {
+        return;
     }
+}
 
 void login(){
 
 }
 void finduser(struct accountInfo tkn[], struct User tkn_user[], int n) {
+    FILE *file = fopen("user.txt", "r");
+    if (file == NULL) {
+        printf("Error: Cannot open file user.txt!\n");
+        return;
+    }
+    while (fscanf(file, "%[^,], %[^,], %[^,], %[^,], %d-%d-%d, %[^,], %f, %s\n",
+                  tkn[n].userId, tkn_user[n].name, tkn_user[n].email,
+                  tkn_user[n].phone, &tkn_user[n].dateOfBirth.day,
+                  &tkn_user[n].dateOfBirth.month, &tkn_user[n].dateOfBirth.year,
+                  tkn[n].username, &tkn[n].balance, tkn[n].status) == 10) {
+        n++;
+    }
+    fclose(file);
+
     if (n == 0) {
         printf("*** EMPTY LIST ***\n");
         clear_system();
@@ -292,6 +346,20 @@ void finduser(struct accountInfo tkn[], struct User tkn_user[], int n) {
 }
 
 void lockUnlockUser(struct accountInfo tkn[],struct User tkn_user[], int n) {
+    FILE *file = fopen("user.txt", "r");
+    if (file == NULL) {
+        printf("Error: Cannot open file user.txt!\n");
+        return;
+    }
+    n=0;
+    while (fscanf(file, "%[^,], %[^,], %[^,], %[^,], %d-%d-%d, %[^,], %f, %s\n",
+                  tkn[n].userId, tkn_user[n].name, tkn_user[n].email,
+                  tkn_user[n].phone, &tkn_user[n].dateOfBirth.day,
+                  &tkn_user[n].dateOfBirth.month, &tkn_user[n].dateOfBirth.year,
+                  tkn[n].username, &tkn[n].balance, tkn[n].status) == 10) {
+        n++;
+    }
+    fclose(file);
 
     if (n == 0) {
         printf("*** EMPTY LIST ***\n");
@@ -344,6 +412,20 @@ void lockUnlockUser(struct accountInfo tkn[],struct User tkn_user[], int n) {
                     printf("====================================\n");
                     clear_system();
                 }
+                FILE *fileWrite = fopen("user.txt", "w");
+                if (fileWrite == NULL) {
+                    printf("Error: Cannot open file user.txt for writing!\n");
+                    return;
+                }
+
+                for (int j = 0; j < n; j++) {
+                    fprintf(fileWrite, "%s, %s, %s, %s, %d-%d-%d, %s, %.2f, %s\n",
+                            tkn[j].userId, tkn_user[j].name, tkn_user[j].email,
+                            tkn_user[j].phone, tkn_user[j].dateOfBirth.day,
+                            tkn_user[j].dateOfBirth.month, tkn_user[j].dateOfBirth.year,
+                            tkn[j].username, tkn[j].balance, tkn[j].status);
+                }
+                fclose(fileWrite);
             } else if (choice == 2) {
                 system("cls");
                 return;
@@ -365,85 +447,107 @@ void lockUnlockUser(struct accountInfo tkn[],struct User tkn_user[], int n) {
 }
 
 
-
-
-void listsort(struct accountInfo tkn[], struct User tkn_user[], int n){
-
-    
-    int choice;
-    if (n == 0) {
-        printf("*** EMPTY LIST ***\n");
-        printf("Press (1) to go back: ");
-        int choice_1;
-        scanf("%d",&choice_1);
-        getchar();
-        system("cls");
-        return; 
+void listsort(struct accountInfo tkn[], struct User tkn_user[], int *n) {
+    FILE *file = fopen("user.txt", "r");
+    if (file == NULL) {
+        printf("Error: Cannot open file user.txt!\n");
+        return;
     }
-    system("cls");
+
+
+    *n = 0;
+
+    //doc du lieu tu file txt
+    while (fscanf(file, "%[^,], %[^,], %[^,], %[^,], %d-%d-%d, %[^,], %f, %s\n",
+                  tkn[*n].userId, tkn_user[*n].name, tkn_user[*n].email,
+                  tkn_user[*n].phone, &tkn_user[*n].dateOfBirth.day,
+                  &tkn_user[*n].dateOfBirth.month, &tkn_user[*n].dateOfBirth.year,
+                  tkn[*n].username, &tkn[*n].balance, tkn[*n].status) == 10) {
+        (*n)++;
+    }
+    fclose(file);
+
+    //check
+    printf("Total accounts read from file: %d\n", *n);
+
+    if (*n == 0) {
+        printf("*** EMPTY LIST ***\n");
+        return;
+    }
+
+    int choice;
     printf("\t***SORT LIST***\n");
     printf("[1] Sort by NAME\n");
-    printf("[0] Back menu Admin\n");
-    printf("Enter your choice : ");
+    printf("[0] Back to Admin menu\n");
+    printf("Enter your choice: ");
     scanf("%d", &choice);
     getchar();
 
+    if (choice == 1) {
+        printf("\t***SORT BY NAME***\n");
+        printf("[1] A -> Z\n");
+        printf("[2] Z -> A\n");
+        printf("Enter your choice (1 or 2): ");
+        scanf("%d", &choice);
+        getchar();
 
-        if(choice==1){
-            system("cls");
-            printf("\t***SORT BY NAME***\n");
-            printf("[1] A - > Z\n");
-            printf("[2] Z - > A\n");
-            printf("Enter your choice (1 or 2): ");
-            scanf("%d",&choice);
-            getchar();
-                if(choice==1){
-                    system("cls");
-                    for (int i=0;i<n-1;i++) {
-                        int minIndex=i;
-                        for (int j =i+1; j<n;j++) {
-                            if (strcmp(tkn_user[j].name,tkn_user[minIndex].name)<0) {
-                                minIndex=j;
-                            }
-                        }
-                        //hoan doi du lieu ng dung
-                        struct User tempUser=tkn_user[i];
-                        tkn_user[i]=tkn_user[minIndex];
-                        tkn_user[minIndex]=tempUser;
-                        //hoan doi du lieu tk
-                        struct accountInfo tempAcc=tkn[i];
-                        tkn[i]=tkn[minIndex];
-                        tkn[minIndex] =tempAcc;
+        if (choice == 1) { //a-z
+            for (int i = 0; i < *n - 1; i++) {
+                int minIndex = i;
+                for (int j = i + 1; j < *n; j++) {
+                    if (strcmp(tkn_user[j].name, tkn_user[minIndex].name) < 0) {
+                        minIndex = j;
                     }
-                    printf("***Sort succesfull***\n");
-                    clear_system();
                 }
-                else if(choice==2){
-                    system("cls");
-                    for (int i=0; i<n -1;i++) {
-                        int maxIndex=i;
-                        for (int j =i +1;j<n;j++) {
-                            if (strcmp(tkn_user[j].name, tkn_user[maxIndex].name)>0) { 
-                                maxIndex=j;
-                            }
-                        }
+                
+                struct User tempUser = tkn_user[i];
+                tkn_user[i] = tkn_user[minIndex];
+                tkn_user[minIndex] = tempUser;
 
-                        struct User tempUser=tkn_user[i];
-                        tkn_user[i] =tkn_user[maxIndex];
-                        tkn_user[maxIndex] =tempUser;
-
-                        struct accountInfo tempAcc =tkn[i];
-                        tkn[i] =tkn[maxIndex];
-                        tkn[maxIndex] =tempAcc;
+                struct accountInfo tempAcc = tkn[i];
+                tkn[i] = tkn[minIndex];
+                tkn[minIndex] = tempAcc;
+            }
+        } else if (choice == 2) { //z-a
+            for (int i = 0; i < *n - 1; i++) {
+                int maxIndex = i;
+                for (int j = i + 1; j < *n; j++) {
+                    if (strcmp(tkn_user[j].name, tkn_user[maxIndex].name) > 0) {
+                        maxIndex = j;
                     }
-                    printf("***Sort succesfull***\n");
-                    clear_system();
                 }
-        }
-        else{
-            system("cls");
+                struct User tempUser = tkn_user[i];
+                tkn_user[i] = tkn_user[maxIndex];
+                tkn_user[maxIndex] = tempUser;
+
+                struct accountInfo tempAcc = tkn[i];
+                tkn[i] = tkn[maxIndex];
+                tkn[maxIndex] = tempAcc;
+            }
+        } else {
             return;
         }
-        
-        
+
+        //ghi de vao file
+        file = fopen("user.txt", "w");
+        if (file == NULL) {
+            printf("Error: Cannot open file user.txt to save!\n");
+            return;
+        }
+        for (int i = 0; i < *n; i++) {
+            fprintf(file, "%s, %s, %s, %s, %d-%d-%d, %s, %.2f, %s\n",
+                    tkn[i].userId,
+                    tkn_user[i].name,
+                    tkn_user[i].email,
+                    tkn_user[i].phone,
+                    tkn_user[i].dateOfBirth.day,
+                    tkn_user[i].dateOfBirth.month,
+                    tkn_user[i].dateOfBirth.year,
+                    tkn[i].username,
+                    tkn[i].balance,
+                    tkn[i].status);
+        }
+        fclose(file);
+        printf("*** Sort successful! Data saved to file. ***\n");
+    }
 }

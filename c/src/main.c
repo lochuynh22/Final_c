@@ -48,7 +48,7 @@ int main(){
                 lockUnlockUser(tkn,tkn_user, n);
                 break;
             case  5:
-                listsort(tkn,tkn_user, n);
+                listsort(tkn,tkn_user, &n);
                 break;
             case 0:
                 break;

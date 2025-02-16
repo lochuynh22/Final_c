@@ -2,5 +2,6 @@
     "files.associations": {
         "datatype.h": "c",
         "string.h": "c"
-    }
+    },
+    "liveServer.settings.multiRootWorkspaceName": "Final_C"
 }
