@@ -46,10 +46,10 @@ struct accountInfo tempAccount;
 struct User tempUser;
 
 while (fread(&tempAccount, sizeof(struct accountInfo), 1, file) &&
-fread(&tempUser, sizeof(struct User), 1, file)) {
-if (id && strcmp(tempAccount.userId, id) == 0) {
-fclose(file);
-return 1;
+    fread(&tempUser, sizeof(struct User), 1, file)) {
+    if (id && strcmp(tempAccount.userId, id) == 0) {
+    fclose(file);
+    return 1;
 }
     if (email && strcmp(tempUser.email, email) == 0) {
     fclose(file);
@@ -87,7 +87,7 @@ void menuAdmin(){
 
 
 void addUser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
-    FILE *file = fopen("user.bin", "ab");
+    FILE *file =fopen("D:\\Rikkei\\Final_C\\c\\src\\user.bin", "ab");
     if (!file) {
         printf("Error opening file!\n");
         return;
@@ -102,14 +102,14 @@ void addUser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
     do {
         printf("Enter the ID (10-20 characters): ");
         fgets(tkn[*n].userId, sizeof(tkn[*n].userId), stdin);
-        tkn[*n].userId[strcspn(tkn[*n].userId, "\n")] = '\0';
+        tkn[*n].userId[strcspn(tkn[*n].userId, "\n")] ='\0';
 
         len = strlen(tkn[*n].userId);
-        if (len < 10 || len > 20) {
+        if (len <10 || len >20) {
             printf("Error: ID must be between 10-20 characters!\n");
             continue;
         }
-        if (is_duplicate(tkn[*n].userId, NULL, NULL, NULL, "user.bin")) {
+        if (is_duplicate(tkn[*n].userId, NULL, NULL, NULL, "D:\\Rikkei\\Final_C\\c\\src\\user.bin")) {
             printf("Error: Duplicate ID!!!\n");
             continue;
         }
@@ -120,21 +120,21 @@ void addUser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
     do {
         printf("Enter full name: ");
         fgets(tkn_user[*n].name, sizeof(tkn_user[*n].name), stdin);
-        tkn_user[*n].name[strcspn(tkn_user[*n].name, "\n")] = '\0';
+        tkn_user[*n].name[strcspn(tkn_user[*n].name, "\n")] ='\0';
         len = strlen(tkn_user[*n].name);
-    } while (len < 5 || len > 25);
+    } while (len <5 || len >25);
 
     //email
     do {
         printf("Enter email: ");
         fgets(tkn_user[*n].email, sizeof(tkn_user[*n].email), stdin);
-        tkn_user[*n].email[strcspn(tkn_user[*n].email, "\n")] = '\0';
+        tkn_user[*n].email[strcspn(tkn_user[*n].email, "\n")] ='\0';
         len = strlen(tkn_user[*n].email);
         if (len < 10 || len > 30) {
             printf("Error: Email must be between 10-30 characters!\n");
             continue;
         }
-        if (is_duplicate(NULL, tkn_user[*n].email, NULL, NULL, "user.bin")) {
+        if (is_duplicate(NULL, tkn_user[*n].email, NULL, NULL, "D:\\Rikkei\\Final_C\\c\\src\\user.bin")) {
             printf("Error: Duplicate email!!!\n");
             continue;
         }
@@ -145,13 +145,13 @@ void addUser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
     do {
         printf("Enter phone number: ");
         fgets(tkn_user[*n].phone, sizeof(tkn_user[*n].phone), stdin);
-        tkn_user[*n].phone[strcspn(tkn_user[*n].phone, "\n")] = '\0';
+        tkn_user[*n].phone[strcspn(tkn_user[*n].phone, "\n")] ='\0';
         len = strlen(tkn_user[*n].phone);
-        if (len < 5 || len > 15) {
+        if (len <5 || len >15) {
             printf("Error: Phone number must be between 5-15 characters!\n");
             continue;
         }
-        if (is_duplicate(NULL, NULL, tkn_user[*n].phone, NULL, "user.bin")) {
+        if (is_duplicate(NULL, NULL, tkn_user[*n].phone, NULL, "D:\\Rikkei\\Final_C\\c\\src\\user.bin")) {
             printf("Error: Duplicate phone number!!!\n");
             continue;
         }
@@ -174,13 +174,13 @@ void addUser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
     do {
         printf("Enter username: ");
         fgets(tkn[*n].username, sizeof(tkn[*n].username), stdin);
-        tkn[*n].username[strcspn(tkn[*n].username, "\n")] = '\0';
+        tkn[*n].username[strcspn(tkn[*n].username, "\n")] ='\0';
         len = strlen(tkn[*n].username);
         if (len < 5 || len > 15) {
             printf("Error: Username must be between 5-15 characters!\n");
             continue;
         }
-        if (is_duplicate(NULL, NULL, NULL, tkn[*n].username, "user.bin")) {
+        if (is_duplicate(NULL, NULL, NULL, tkn[*n].username, "D:\\Rikkei\\Final_C\\c\\src\\user.bin")) {
             printf("Error: Duplicate username!!!\n");
             continue;
         }
@@ -192,9 +192,9 @@ void addUser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
         printf("Enter the balance: ");
         scanf("%f", &tkn[*n].balance);
         getchar();  
-        if (tkn[*n].balance < 0) {
+        if (tkn[*n].balance<0) {
             printf("Error: Balance cannot be negative!\n");
-        }
+        }   
     } while (tkn[*n].balance < 0);
 
     //ghi de du lieu vao file
@@ -203,48 +203,57 @@ void addUser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
 
     fclose(file);
     (*n)++;
-    
+    system("cls");
     printf("\nUser added successfully!\n");
 }
 
 void displaylistuser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
-    FILE *file = fopen("user.bin", "rb"); // mở tệp để đọc
+    FILE *file = fopen("D:\\Rikkei\\Final_C\\c\\src\\user.bin", "rb");
     if (file == NULL) {
-        printf("Error: Cannot open file user.bin\n");
+        printf("Error: Cannot open file user.bin!\n");
         return;
     }
-    if (*n == 0) {
-        printf("*** EMPTY LIST ***\n");
-        printf("Press (1) to go back: ");
-        int choice_1;
-        scanf("%d",&choice_1);
-        getchar();
-        system("cls");
-        return; 
+
+    int count = 0;
+
+    // doc du lieu
+    while (fread(&tkn[count], sizeof(struct accountInfo), 1, file) == 1 &&
+           fread(&tkn_user[count], sizeof(struct User), 1, file) == 1) {
+        count++;
     }
 
-    int choice;
+    // cap nhat so luong
+    *n = count;
 
+    // neu khong co du lieu
+    if (*n == 0) {
+        printf("*** Empty List ***\n");
+        printf("Press (1) back: ");
+        int choice_1;
+        scanf("%d", &choice_1);
+        getchar();
+        fclose(file);
+        system("cls");
+        return;
+    }
+
+    // hien thi du lieu che do doc
+    int choice;
     printf("+======================+======================+==============================+====================+============+\n");
     printf("|        ID            |        Name          |            Email             |       Phone        |   Status   |\n");
     printf("+======================+======================+==============================+====================+============+\n");
 
-    *n = 0;
-
-    // Đọc dữ liệu từ tệp và xử lý
-    while (fread(&tkn[*n], sizeof(struct accountInfo), 1, file) == 1 &&
-           fread(&tkn_user[*n], sizeof(struct User), 1, file) == 1) {
+    for (int i = 0; i < *n; i++) {
         printf("| %-20s | %-20s | %-28s | %-18s | %-10s |\n",
-               tkn[*n].userId, tkn_user[*n].name, tkn_user[*n].email, tkn_user[*n].phone, tkn[*n].status);
+               tkn[i].userId, tkn_user[i].name, tkn_user[i].email, tkn_user[i].phone, tkn[i].status);
         printf("+======================+======================+==============================+====================+============+\n");
-        
-        (*n)++; 
     }
 
     fclose(file);
 
-    printf("Pree (1) back: ");
+    printf("Press (1) back: ");
     scanf("%d", &choice);
+    getchar();
     system("cls");
 
     if (choice == 1) {
@@ -252,8 +261,9 @@ void displaylistuser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
     }
 }
 
+
 void finduser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
-    FILE *file = fopen("user.bin", "rb");
+    FILE *file = fopen("D:\\Rikkei\\Final_C\\c\\src\\user.bin", "rb");
     if (file == NULL) {
         printf("Error: Cannot open file user.bin!\n");
         return;
@@ -353,7 +363,7 @@ void finduser(struct accountInfo tkn[], struct User tkn_user[], int *n) {
 }
 
 void lockUnlockUser(struct accountInfo tkn[],struct User tkn_user[], int *n) {
-    FILE *file = fopen("user.bin", "rb");
+    FILE *file = fopen("D:\\Rikkei\\Final_C\\c\\src\\user.bin", "rb");
     if (file == NULL) {
         printf("Error: Cannot open file user.bin!\n");
         return;
@@ -365,7 +375,7 @@ void lockUnlockUser(struct accountInfo tkn[],struct User tkn_user[], int *n) {
 }
     fclose(file);
 
-    if (*n == 0) {
+    if (*n ==0) {
         printf("*** EMPTY LIST ***\n");
         printf("Press (1) to go back: ");
         int choice_1;
@@ -376,14 +386,14 @@ void lockUnlockUser(struct accountInfo tkn[],struct User tkn_user[], int *n) {
     }
 
     char userId[21];
-    int choice, found = 0;
+    int choice, found =0;
     printf("\t***LOCK UNLOCK USER***\n");
     printf("Enter the User ID to lock/unlock: ");
     fflush(stdin);
     fgets(userId, sizeof(userId), stdin);
     userId[strcspn(userId,"\n")] ='\0';
     for (int i = 0; i<*n;i++) {
-        if (strcmp(tkn[i].userId, userId) == 0) { 
+        if (strcmp(tkn[i].userId, userId) ==0) { 
             found = 1;
             system("cls");
             printf("===============*INFO*===============\n");
@@ -401,7 +411,7 @@ void lockUnlockUser(struct accountInfo tkn[],struct User tkn_user[], int *n) {
             getchar(); 
             system("cls");
 
-            if (choice == 1) {
+            if (choice ==1) {
                 system("cls");
                 if (strcmp(tkn[i].status, "LOCK") == 0) {
                     strcpy(tkn[i].status, "UNLOCK");
@@ -416,18 +426,18 @@ void lockUnlockUser(struct accountInfo tkn[],struct User tkn_user[], int *n) {
                     printf("====================================\n");
                     clear_system();
                 }
-                FILE *fileWrite = fopen("user.bin", "wb");
+                FILE *fileWrite =fopen("D:\\Rikkei\\Final_C\\c\\src\\user.bin", "wb");
                 if (fileWrite == NULL) {
                     printf("Error: Cannot open file user.bin for writing!\n");
                     return;
                 }
 
-                for (int j = 0; j < *n; j++) {
+                for (int j =0; j<*n;j++) {
                     fwrite(&tkn[j], sizeof(struct accountInfo), 1, fileWrite);
                     fwrite(&tkn_user[j], sizeof(struct User), 1, fileWrite);
                 }
                 fclose(fileWrite);
-            } else if (choice == 2) {
+            } else if (choice ==2) {
                 system("cls");
                 return;
             } else {
@@ -449,7 +459,7 @@ void lockUnlockUser(struct accountInfo tkn[],struct User tkn_user[], int *n) {
 
 
 void listsort(struct accountInfo tkn[], struct User tkn_user[], int *n) {
-    FILE *file = fopen("user.bin", "rb");
+    FILE *file = fopen("D:\\Rikkei\\Final_C\\c\\src\\user.bin", "rb");
     if (file == NULL) {
         printf("Error: Cannot open file user.bin!\n");
         return;
@@ -458,14 +468,14 @@ void listsort(struct accountInfo tkn[], struct User tkn_user[], int *n) {
     *n = 0;
 
     //doc du lieu tu file txt
-    while (fread(&tkn[*n], sizeof(struct accountInfo), 1, file) == 1 &&
-           fread(&tkn_user[*n], sizeof(struct User), 1, file) == 1) {
+    while (fread(&tkn[*n], sizeof(struct accountInfo), 1, file) ==1 &&
+           fread(&tkn_user[*n], sizeof(struct User), 1, file) ==1) {
         (*n)++;
     }
     fclose(file);
 
     //check
-    printf("Total accounts read from file: %d\n", *n);
+    // printf("Total accounts read from file: %d\n", *n);
 
     if (*n == 0) {
         printf("*** EMPTY LIST ***\n");
@@ -489,10 +499,10 @@ void listsort(struct accountInfo tkn[], struct User tkn_user[], int *n) {
         getchar();
 
         if (choice == 1) { //a-z
-            for (int i = 0; i < *n - 1; i++) {
+            for (int i=0;i<*n-1;i++) {
                 int minIndex = i;
-                for (int j = i + 1; j < *n; j++) {
-                    if (strcmp(tkn_user[j].name, tkn_user[minIndex].name) < 0) {
+                for (int j=i+1;j<*n;j++) {
+                    if (strcmp(tkn_user[j].name, tkn_user[minIndex].name) <0) {
                         minIndex = j;
                     }
                 }
@@ -507,16 +517,16 @@ void listsort(struct accountInfo tkn[], struct User tkn_user[], int *n) {
                 system("cls");
             }
         } else if (choice == 2) { //z-a
-            for (int i = 0; i < *n - 1; i++) {
+            for (int i =0;i<*n-1;i++) {
                 int maxIndex = i;
-                for (int j = i + 1; j < *n; j++) {
+                for (int j=i+1;j<*n;j++) {
                     if (strcmp(tkn_user[j].name, tkn_user[maxIndex].name) > 0) {
-                        maxIndex = j;
+                        maxIndex=j;
                     }
                 }
-                struct User tempUser = tkn_user[i];
-                tkn_user[i] = tkn_user[maxIndex];
-                tkn_user[maxIndex] = tempUser;
+                struct User tempUser =tkn_user[i];
+                tkn_user[i] =tkn_user[maxIndex];
+                tkn_user[maxIndex] =tempUser;
 
                 struct accountInfo tempAcc = tkn[i];
                 tkn[i] = tkn[maxIndex];
@@ -528,7 +538,7 @@ void listsort(struct accountInfo tkn[], struct User tkn_user[], int *n) {
         }
 
         //ghi de vao file
-        file = fopen("user.bin", "wb");
+        file = fopen("D:\\Rikkei\\Final_C\\c\\src\\user.bin", "wb");
         if (file == NULL) {
             printf("Error: Cannot open file user.bin to save!\n");
             return;
