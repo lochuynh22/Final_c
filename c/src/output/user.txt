@@ -1,4 +1,0 @@
-083206001301, huynh la tien loc, huynhlatienloc123@gmail.com, 0944495653, 1-1-2006, user04, 100000.00, LOCK
-083206001302, nguyen van a, huynhlatienloc123@gmail.com, 0944495653, 1-1-2006, user01, 1.00, LOCK
-083206001303, nguyen van b, nguyenvana@gmail.com, 021412412, 20-4-1995, user02, 10000.00, UNLOCK
-083206001304, nguyen van c, nguyenvanb@gmail.com, 0942424, 1-2-1996, user03, 100000.00, LOCK

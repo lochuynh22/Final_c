@@ -27,7 +27,7 @@ int main(){
     switch(choice){
         case 1:{
         int admin_choice;
-
+        
         do{
             menuAdmin();
             scanf("%d",&admin_choice);
@@ -36,16 +36,16 @@ int main(){
         switch (admin_choice)
         {
             case 1:
-                adduser(tkn,tkn_user,&n);
+                addUser(tkn,tkn_user,&n);
                 break;
             case 2:
                 displaylistuser(tkn,tkn_user,&n);
                 break;
             case 3:
-                finduser(tkn, tkn_user,n);
+                finduser(tkn, tkn_user, &n);
                 break;
             case 4:
-                lockUnlockUser(tkn,tkn_user, n);
+                lockUnlockUser(tkn,tkn_user, &n);
                 break;
             case  5:
                 listsort(tkn,tkn_user, &n);
