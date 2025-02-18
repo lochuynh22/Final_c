@@ -11,6 +11,7 @@ int main(){
     User tkn_user[100];
     int choice;
     int n=0;
+    char username[20], password[20];
     do{
         printf("\n***Bank Management System Using C***");
         printf("\n");
@@ -27,7 +28,24 @@ int main(){
     switch(choice){
         case 1:{
         int admin_choice;
-        
+        printf("****===========Login===========****\n");
+        while(1){
+            printf("Enter username : ");
+            fgets(username,sizeof(username), stdin);
+            // loai bo ki tu '\n'
+            username[strcspn(username,"\n")] = '\0';
+            printf("Enter password : ");
+            fgets(password,sizeof(password), stdin);
+            password[strcspn(password,"\n")] = '\0';
+            int isCheck = checkLogin(username,password);
+
+            if(isCheck){
+                break;
+            }else{
+                // bat nguoi dung nhap lai
+                printf("Error: Inaccurate information\n");
+            }
+        }
         do{
             menuAdmin();
             scanf("%d",&admin_choice);

@@ -13,3 +13,7 @@ void finduser(accountInfo tkn[], int n);
 int is_duplicate(const char *new_id, const char *new_email, const char *new_phone, const char *new_username);
 //ham mo khoa
 void lockunclockuser(struct accountInfo tkn[], struct User tkn_user[],int n);
+//kt dang nhap
+int checkLogin(char *username, char *password);
+//ham xoa consol
+void clear_system();

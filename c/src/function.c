@@ -4,23 +4,35 @@
 #include <string.h>
 #include "../include/datatype.h"
 
-//login admin
-void login_admin(){
-    char username[20], password[20];
-    while(1){
-        printf("Enter username: ");
-        fgets(username,sizeof(username),stdin);
-        username[strcspn(username,"\n")] = '\0';
-        printf("Enter password: ");
-        fgets(password, sizeof(password),stdin);
-        password[strcspn(password,"\n")]='\0';
-    }
-}
-//kt dang nhap
-// int check_login(char *username, char *password){
-//     File *f;
-
+// //login admin
+// void login_admin(){
+//     char username[20], password[20];
+//     while(1){
+//         printf("Enter username: ");
+//         fgets(username,sizeof(username),stdin);
+//         username[strcspn(username,"\n")] = '\0';
+//         printf("Enter password: ");
+//         fgets(password, sizeof(password),stdin);
+//         password[strcspn(password,"\n")]='\0';
+//     }
 // }
+//kt dang nhap
+int checkLogin(char *username, char *password){
+
+    FILE *file;
+    file =  fopen("D:\\Rikkei\\Final_C\\c\\src\\tk.bin","r");
+    if(file == NULL){
+        printf("ko mo dc file \n");
+        return 0;
+    }
+    char user[20], pass[20];
+    fgets(user,sizeof(user),file);
+    user[strcspn(user,"\n")] = '\0';
+    fgets(pass,sizeof(pass),file);
+    pass[strcspn(pass,"\n")] = '\0';
+    fclose(file);
+    return strcmp(username,user) == 0 && strcmp(password,pass)==0;
+}
 
 //doc ki tu xuong dong
 void clear_buffer() {
